@@ -45,21 +45,16 @@ class GeminiService {
       // Add repository context to the prompt if provided
       let enhancedMessage = message;
       if (context) {
-        const contextPrefix = `
+        const contextInfo = `
 Repository Context:
 - Name: ${context.name}
 ${context.description ? `- Description: ${context.description}` : ""}
 - Languages: ${context.languages.join(", ")}
 ${context.stats ? `- Stats: ${context.stats.commits} commits, ${context.stats.contributors} contributors, ${context.stats.files} files` : ""}
 
-User Question: `;
-        const maxMessageLen = 5000 - contextPrefix.length;
-        const safeMessage = message.length > maxMessageLen ? message.substring(0, maxMessageLen) : message;
-        enhancedMessage = contextPrefix + safeMessage;
-      } else {
-        if (enhancedMessage.length > 5000) {
-          enhancedMessage = enhancedMessage.substring(0, 5000);
-        }
+User Question: ${message}
+`;
+        enhancedMessage = contextInfo;
       }
 
       const res = await fetch("/api/ai/chat", {

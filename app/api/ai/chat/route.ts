@@ -11,9 +11,9 @@ export async function POST(request: NextRequest) {
 
     // Free-form mode: client provides a prebuilt prompt.
     if (typeof prompt === "string" && prompt.trim()) {
-      if (prompt.length > 5000) {
+      if (prompt.length > 10000) {
         return NextResponse.json(
-          { error: "Prompt exceeds maximum length of 5000 characters" },
+          { error: "Prompt exceeds maximum length of 10000 characters" },
           { status: 400 }
         );
       }
