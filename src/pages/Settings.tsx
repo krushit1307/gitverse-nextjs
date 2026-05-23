@@ -167,8 +167,8 @@ export default function Settings() {
       toast({
         title: "Error",
         description:
-          error?.response?.data?.message ||
           error?.response?.data?.error ||
+          error.message ||
           "Failed to update profile",
         variant: "destructive",
       });
@@ -227,7 +227,7 @@ export default function Settings() {
       toast({
         title: "Error",
         description:
-          error.response?.data?.message || "Failed to change password",
+          error.response?.data?.error || "Failed to change password",
         variant: "destructive",
       });
     } finally {
@@ -305,7 +305,7 @@ export default function Settings() {
       toast({
         title: "Error",
         description:
-          error.response?.data?.message || "Failed to delete account",
+          error.response?.data?.error || "Failed to delete account",
         variant: "destructive",
       });
     } finally {
