@@ -11,6 +11,12 @@ export async function POST(request: NextRequest) {
 
     // Free-form mode: client provides a prebuilt prompt.
     if (typeof prompt === "string" && prompt.trim()) {
+      if (prompt.length > 5000) {
+        return NextResponse.json(
+          { error: "Prompt exceeds maximum length of 5000 characters" },
+          { status: 400 }
+        );
+      }
       const response = await getGeminiService().chatRaw(prompt);
       return NextResponse.json({ response });
     }
@@ -18,6 +24,13 @@ export async function POST(request: NextRequest) {
     if (!repositoryId || !question) {
       return NextResponse.json(
         { error: "Repository ID and question are required" },
+        { status: 400 }
+      );
+    }
+
+    if (typeof question === "string" && question.length > 5000) {
+      return NextResponse.json(
+        { error: "Question exceeds maximum length of 5000 characters" },
         { status: 400 }
       );
     }
