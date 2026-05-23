@@ -106,9 +106,9 @@ const FileTreeNode: React.FC<FileTreeProps> = ({
       </div>
       {node.type === "folder" && isExpanded && node.children && (
         <div>
-          {node.children.map((child, index) => (
+          {node.children.map((child) => (
             <FileTreeNode
-              key={index}
+              key={child.path}
               node={child}
               level={level + 1}
               onFileSelect={onFileSelect}
