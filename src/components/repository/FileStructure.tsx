@@ -5,7 +5,6 @@ import {
   File,
   Folder,
   FolderOpen,
-  X,
   GitCommit,
   BarChart3,
   Code,
