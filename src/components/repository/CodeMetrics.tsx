@@ -414,7 +414,7 @@ export function CodeMetrics({ repository }: CodeMetricsProps) {
                         ? "bg-yellow-500"
                         : "bg-red-500"
                   } transition-all duration-500`}
-                  style={{ width: `${metric.value}%` }}
+                  style={{ width: `${Math.min(metric.value, 100)}%` }}
                 />
               </div>
             </Card>
