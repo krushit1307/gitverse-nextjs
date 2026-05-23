@@ -18,6 +18,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui";
+import { Modal } from "@/components/ui/Modal";
 
 interface FileNode {
   name: string;
@@ -225,23 +226,13 @@ export const FileStructure = ({ repository }: FileStructureProps) => {
       </Card>
 
       {/* File Analytics Modal */}
-      {selectedFile && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50"
-          onClick={() => setSelectedFile(null)}
-        >
-          <Card
-            className="glass max-w-3xl w-full max-h-[90vh] overflow-y-auto p-8 animate-fade-in-up"
-            onClick={(e: React.MouseEvent) => e.stopPropagation()}
-          >
-            {/* Close button */}
-            <button
-              onClick={() => setSelectedFile(null)}
-              className="absolute top-4 right-4 p-2 hover:bg-white/10 rounded-lg transition-all"
-            >
-              <X className="h-5 w-5" />
-            </button>
-
+      <Modal
+        isOpen={!!selectedFile}
+        onClose={() => setSelectedFile(null)}
+        size="xl"
+      >
+        {selectedFile && (
+          <div>
             {/* File Header */}
             <div className="mb-8">
               <div className="flex items-start gap-4 mb-4">
@@ -495,9 +486,10 @@ export const FileStructure = ({ repository }: FileStructureProps) => {
                 </div>
               </div>
             </div>
-          </Card>
-        </div>
-      )}
+            </div>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
