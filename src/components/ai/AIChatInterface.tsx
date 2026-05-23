@@ -51,6 +51,7 @@ export function AIChatInterface({ repositoryContext }: AIChatInterfaceProps) {
         },
       ]);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
