@@ -486,7 +486,6 @@ export const FileStructure = ({ repository }: FileStructureProps) => {
                 </div>
               </div>
             </div>
-            </div>
           </div>
         )}
       </Modal>
