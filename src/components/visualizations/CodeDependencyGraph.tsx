@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import * as d3 from "d3";
-import { Card, EmptyState } from "@/components/ui";
-import { Network } from "lucide-react";
+import { Card } from "@/components/ui";
 import { GraphAnalyzer } from "@/utils/graphAnalyzer";
+import { ModuleSummaryPanel } from "./ModuleSummaryPanel";
+import { AISettingsModal } from "@/components/settings/AISettingsModal";
 
 
 
@@ -17,16 +18,11 @@ export function CodeDependencyGraph({ repository }: CodeDependencyGraphProps) {
   const [selectedNode, setSelectedNode] = useState<any>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-  const graphAnalyzer = new GraphAnalyzer();
-  const graphData = graphAnalyzer.buildDependencyGraph(repository?.files || []);
-
-  const graphAnalyzer = new GraphAnalyzer();
-  const graphData = graphAnalyzer.buildDependencyGraph(repository?.files || []);
-
   useEffect(() => {
     if (!svgRef.current) return;
 
-    const graphData = generateDependencyGraph(repository);
+    const graphAnalyzer = new GraphAnalyzer();
+    const graphData = graphAnalyzer.buildDependencyGraph(repository?.files || []);
 
     // If no data, show empty state
     if (graphData.nodes.length === 0) {

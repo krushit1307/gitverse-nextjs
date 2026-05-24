@@ -52,16 +52,19 @@ export const ContributorGuide = ({ repositoryData }: { repositoryData: any }) =>
         }
       );
       
-      let analysisText = response.data.analysis;
-      // Remove any potential markdown json block markers
-      if (analysisText.startsWith("```json")) {
-        analysisText = analysisText.replace(/^```json/g, "").replace(/```$/g, "");
-      } else if (analysisText.startsWith("```")) {
-        analysisText = analysisText.replace(/^```/g, "").replace(/```$/g, "");
+      let analysisText = response.data.analysis || "";
+      // Remove optional markdown json fences and surrounding whitespace
+      analysisText = analysisText.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+
+      const parsedData = JSON.parse(analysisText);
+      if (!parsedData || !Array.isArray(parsedData.modules) || !Array.isArray(parsedData.hotspots)) {
+        throw new Error("Invalid response structure from AI.");
       }
-      
-      const parsedData = JSON.parse(analysisText.trim());
-      setData(parsedData);
+
+      setData({
+        modules: parsedData.modules,
+        hotspots: parsedData.hotspots
+      });
     } catch (error: any) {
       console.error("Failed to load contributor guide:", error);
       toast({
@@ -75,7 +78,7 @@ export const ContributorGuide = ({ repositoryData }: { repositoryData: any }) =>
   };
 
   useEffect(() => {
-    if (repositoryData?.id && !data) {
+    if (repositoryData?.id) {
       fetchAnalysis();
     }
   }, [repositoryData?.id]);

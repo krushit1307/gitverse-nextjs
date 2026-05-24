@@ -12,7 +12,7 @@ import { Contributors } from "@/components/repository/Contributors";
 import { RepositoryInsights } from "@/components/repository/RepositoryInsights";
 import { RepositoryMentorTab } from "@/components/ai/RepositoryMentorTab";
 import { ContributorGuide } from "@/components/repository/ContributorGuide";
-import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
+
 import {
   Home,
   FolderTree,

@@ -251,7 +251,7 @@ Analyze this repository's structure to determine contribution difficulty. Return
   "modules": [
     {
       "name": "ModuleName (e.g., UI Components, Auth API)",
-      "difficulty": "Beginner" | "Intermediate" | "Advanced",
+      "difficulty": "Beginner",
       "reason": "Why this difficulty?",
       "entryPoints": ["Specific file or feature to start with"]
     }
@@ -259,7 +259,7 @@ Analyze this repository's structure to determine contribution difficulty. Return
   "hotspots": [
     {
       "name": "ModuleName",
-      "riskLevel": "Low" | "Medium" | "High",
+      "riskLevel": "Low",
       "description": "Why is this a hotspot?"
     }
   ]
