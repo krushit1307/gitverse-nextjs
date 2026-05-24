@@ -10,16 +10,7 @@ async function kickLocalRunner(request: NextRequest): Promise<void> {
   const origin = new URL(request.url).origin;
   const secret = process.env.ANALYSIS_RUNNER_SECRET;
   
-  // We don't await the fetch response body, but we can wait for the request to be sent
-  // Actually, we must await the fetch to ensure it doesn't fail, but we don't want to block the job queue response.
-  // Wait, local runner is just for dev, so blocking is acceptable, or we can use a non-blocking approach that fails the job async.
-  // But CodeRabbit said: "Do not acknowledge job queueing when dispatch may have failed."
-  // So we must await. For GitHub Action, it's fast. For local, we just await it. 
-  // To avoid blocking, we could use an async IIFE that updates the job on failure, but let's just await it as requested.
-  // Wait, if we await fetch, it waits for the entire analysis to finish. 
-  // Let's fire the fetch and catch errors, if fetch fails synchronously (e.g. connection refused) we throw.
-  // Node's fetch returns the promise when headers are received, so it WILL block until analysis finishes.
-  // Let's just await the workflow trigger.
+  // Trigger local analysis runner; caller decides whether to await this dispatch.
   const response = await fetch(`${origin}/api/internal/run-analysis`, {
     method: "POST",
     headers: secret ? { "x-analysis-runner-secret": secret } : undefined,
@@ -90,12 +81,19 @@ if (existingJob) {
       } else {
         // In dev, we don't want to block the 202 response for the entire analysis.
         // We catch fetch failures and update the job to FAILED if it couldn't start.
-        kickLocalRunner(request).catch(async (err) => {
-          console.error("Local runner dispatch failed:", err);
-          await prisma.analysisJob.update({
-            where: { id: job.id },
-            data: { status: "FAILED", error: "Failed to dispatch local runner" }
-          });
+        void kickLocalRunner(request).catch((err) => {
+          console.error("Local runner dispatch failed:", sanitizeError(err));
+          void prisma.analysisJob
+            .updateMany({
+              where: { id: job.id, status: "QUEUED" },
+              data: { status: "FAILED", error: "Failed to dispatch local runner" },
+            })
+            .catch((updateErr) => {
+              console.error(
+                "Failed to persist local dispatch failure:",
+                sanitizeError(updateErr),
+              );
+            });
         });
       }
     } catch (dispatchError: any) {
