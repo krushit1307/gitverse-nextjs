@@ -7,7 +7,8 @@ export interface AIAnalysisRequest {
     | "code-quality"
     | "security"
     | "architecture"
-    | "suggestions";
+    | "suggestions"
+    | "contribution-difficulty";
   context?: {
     files?: Array<{ path: string; content: string }>;
     commits?: Array<{ message: string; author: string; date: string }>;
@@ -240,6 +241,31 @@ Provide improvement suggestions:
 5. Technology upgrade recommendations
 
 Prioritize by impact and effort.`;
+
+      case "contribution-difficulty":
+        return `${baseContext}
+${context?.files ? `- Files structure:\n${context.files.slice(0, 100).map(f => f.path).join('\n')}\n(truncated for length)` : ""}
+
+Analyze this repository's structure to determine contribution difficulty. Return ONLY valid JSON matching this exact structure:
+{
+  "modules": [
+    {
+      "name": "ModuleName (e.g., UI Components, Auth API)",
+      "difficulty": "Beginner" | "Intermediate" | "Advanced",
+      "reason": "Why this difficulty?",
+      "entryPoints": ["Specific file or feature to start with"]
+    }
+  ],
+  "hotspots": [
+    {
+      "name": "ModuleName",
+      "riskLevel": "Low" | "Medium" | "High",
+      "description": "Why is this a hotspot?"
+    }
+  ]
+}
+
+Focus on identifying beginner-friendly entry points and complex/risky hotspots. Return pure JSON without markdown backticks.`;
 
       default:
         return `${baseContext}\n\nAnalyze this repository and provide insights.`;

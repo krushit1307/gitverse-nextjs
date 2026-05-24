@@ -11,6 +11,7 @@ import { CommitHistory } from "@/components/repository/CommitHistory";
 import { Contributors } from "@/components/repository/Contributors";
 import { RepositoryInsights } from "@/components/repository/RepositoryInsights";
 import { RepositoryMentorTab } from "@/components/ai/RepositoryMentorTab";
+import { ContributorGuide } from "@/components/repository/ContributorGuide";
 import {
   Home,
   FolderTree,
@@ -25,6 +26,7 @@ import {
   AlertCircle,
   Clock,
   Loader2,
+  Target,
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -38,7 +40,8 @@ type TabType =
   | "commits"
   | "contributors"
   | "mentor"
-  | "insights";
+  | "insights"
+  | "contributor-guide";
 
 interface Tab {
   id: TabType;
@@ -64,6 +67,11 @@ const tabs: Tab[] = [
     id: "insights",
     label: "Insights",
     icon: <BarChart3 className="h-4 w-4" />,
+  },
+  {
+    id: "contributor-guide",
+    label: "Contributor Guide",
+    icon: <Target className="h-4 w-4" />,
   },
 ];
 
@@ -266,6 +274,8 @@ export default function RepositoryAnalysis() {
         return <RepositoryMentorTab repositoryData={repository} />;
       case "insights":
         return <RepositoryInsights repository={repository} />;
+      case "contributor-guide":
+        return <ContributorGuide repositoryData={repository} />;
       default:
         return <RepositoryOverview />;
     }
