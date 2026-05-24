@@ -359,6 +359,7 @@ export class GitService {
       const child = spawn("git", args, spawnOpts);
 
       if (!child.stdout) {
+        child.kill();
         reject(new Error("Failed to spawn git process: stdout is null"));
         return;
       }
