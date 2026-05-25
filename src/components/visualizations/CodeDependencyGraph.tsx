@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import { Card } from "@/components/ui";
 import { GraphAnalyzer } from "@/utils/graphAnalyzer";
@@ -15,14 +15,12 @@ export function CodeDependencyGraph({ repository }: CodeDependencyGraphProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   
-  const [selectedNode, setSelectedNode] = useState<any>(null);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const graphAnalyzer = new GraphAnalyzer();
+  const graphData = graphAnalyzer.buildDependencyGraph(repository?.files || []);
 
   useEffect(() => {
     if (!svgRef.current) return;
 
-    const graphAnalyzer = new GraphAnalyzer();
-    const graphData = graphAnalyzer.buildDependencyGraph(repository?.files || []);
 
     // If no data, show empty state
     if (graphData.nodes.length === 0) {
@@ -116,10 +114,6 @@ export function CodeDependencyGraph({ repository }: CodeDependencyGraphProps) {
             if (!d.active) simulation.alphaTarget(0);
             d.fx = null;
             d.fy = null;
-          })
-          .on("click", (_event: any, d: any) => {
-             // Let user click a node to view its AI summary
-             setSelectedNode(d);
           })
       );
 
@@ -311,22 +305,6 @@ export function CodeDependencyGraph({ repository }: CodeDependencyGraphProps) {
 />
 
     </Card>
-
-    {selectedNode && (
-      <ModuleSummaryPanel
-        nodeId={selectedNode.id}
-        nodeName={selectedNode.name}
-        nodeType={selectedNode.type}
-        repositoryFiles={repository?.files || []}
-        onClose={() => setSelectedNode(null)}
-        onOpenSettings={() => setIsSettingsOpen(true)}
-      />
-    )}
-
-    <AISettingsModal 
-      isOpen={isSettingsOpen} 
-      onClose={() => setIsSettingsOpen(false)} 
-    />
     </div>
   );
 }

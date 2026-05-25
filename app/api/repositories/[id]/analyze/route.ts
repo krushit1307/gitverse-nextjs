@@ -107,7 +107,6 @@ if (existingJob) {
         { status: 500 }
       );
     }
-
     return NextResponse.json(
       { message: "Job queued", jobId: job.id, status: job.status },
       { status: 202 }
